@@ -42,9 +42,11 @@ public class Teacher {
 
     private List<String> leaveRequests; // References LeaveRequest.leaveRequestId
 
+    private List<String> handlingClasses; // References Class.classId
+
     @CreatedDate
     private LocalDateTime createdAt;
-
+    
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
@@ -128,6 +130,14 @@ public class Teacher {
         this.leaveRequests = leaveRequests;
     }
 
+    public List<String> getHandlingClasses() {
+        return handlingClasses;
+    }
+
+    public void setHandlingClasses(List<String> handlingClasses) {
+        this.handlingClasses = handlingClasses;
+    }
+    
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

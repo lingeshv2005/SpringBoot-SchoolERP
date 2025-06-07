@@ -54,7 +54,7 @@ const classroomSchema = new Schema({
   createdBy: { type: String, required: true },
   updatedBy: { type: String, required: true },
   name: { type: String, required: true, unique: true },
-  capacity: { type: Number, required: true },
+  capacity: { type: Number, default: 0 },
   department: { type: String, required: true },
   classTeacher: { type: String },
   subjects: [{
@@ -65,10 +65,8 @@ const classroomSchema = new Schema({
     typeOfRep: { type: String },
     student: { type: String }
   }],
-  batch: { type: String },
-  timeTable: {
-    fileUrl: { type: String }
-  },
+  batch: { type: String, required: true },
+  timeTable: { type: String },
   students: [{ type: String }]
 }, { timestamps: true });
 
@@ -346,10 +344,15 @@ const notificationSchema = new Schema({
 //    Add teacher to department✅
 //    Add teacher to handling subjects✅
 
-//    Create classroom
+//    Create classroom✅
+//    assignSubjects✅
+//    assignClassTeacher✅
+
 //    Create student 
 //    Add student to classroom
 //    Create parent
+//    assignRepresentatives
+
 
 //    Create exam controller
 //    Create exam controller head

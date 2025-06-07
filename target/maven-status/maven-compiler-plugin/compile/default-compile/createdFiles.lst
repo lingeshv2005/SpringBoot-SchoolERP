@@ -4,7 +4,6 @@ com\example\schoolerpbackend\entity\User.class
 com\example\schoolerpbackend\entity\AttendanceRecord$Status.class
 com\example\schoolerpbackend\entity\User$AlsoRole.class
 com\example\schoolerpbackend\entity\Exam$AssignedTimetable.class
-com\example\schoolerpbackend\entity\Classroom$TimeTable.class
 com\example\schoolerpbackend\entity\ExamControllerHead.class
 com\example\schoolerpbackend\entity\ExamResult$StudentResult.class
 com\example\schoolerpbackend\entity\ExamInvigilation.class

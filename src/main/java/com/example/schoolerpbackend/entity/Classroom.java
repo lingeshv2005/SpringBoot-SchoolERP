@@ -2,82 +2,79 @@ package com.example.schoolerpbackend.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "classrooms", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "classroomId"),
-    @UniqueConstraint(columnNames = "name")
-})
+import jakarta.validation.constraints.NotBlank;
+
+@Document(collection = "classrooms")
 public class Classroom {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String classroomId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String classroomId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Indexed(unique = true)
     private String name;
 
-    @Column(nullable = false)
-    private int capacity;
+    private Integer capacity = 0;
 
-    @Column(nullable = false)
+    @NotBlank
     private String department;
 
-    @Column
     private String classTeacher;
 
-    @ElementCollection
-    @CollectionTable(name = "classroom_subjects")
     private List<SubjectTeacher> subjects;
 
-    @ElementCollection
-    @CollectionTable(name = "classroom_representatives")
     private List<Representative> representatives;
 
-    @Column
+    @NotBlank
     private String batch;
 
-    @Embedded
-    private TimeTable timeTable;
+    private String timeTable; // Represents file URL
 
-    @ElementCollection
-    @Column
     private List<String> students;
 
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
+    @CreatedDate
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column
-    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Embeddable
+    public Classroom() {
+        this.classroomId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.capacity = 0;
+    }
+
     public static class SubjectTeacher {
         private String subject;
         private String teacher;
 
-        // Getters and Setters
+        public SubjectTeacher() {
+        }
+
+        public SubjectTeacher(String subject, String teacher) {
+            this.subject = subject;
+            this.teacher = teacher;
+        }
+
         public String getSubject() {
             return subject;
         }
@@ -95,12 +92,18 @@ public class Classroom {
         }
     }
 
-    @Embeddable
     public static class Representative {
         private String typeOfRep;
         private String student;
 
-        // Getters and Setters
+        public Representative() {
+        }
+
+        public Representative(String typeOfRep, String student) {
+            this.typeOfRep = typeOfRep;
+            this.student = student;
+        }
+
         public String getTypeOfRep() {
             return typeOfRep;
         }
@@ -118,146 +121,121 @@ public class Classroom {
         }
     }
 
-    @Embeddable
-    public static class TimeTable {
-        private String fileUrl;
-
-        // Getters and Setters
-        public String getFileUrl() {
-            return fileUrl;
-        }
-
-        public void setFileUrl(String fileUrl) {
-            this.fileUrl = fileUrl;
-        }
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() {
+    // Getters and Setters (Optional: remove if you don't want them)
+    public String getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getClassroomId() {
         return classroomId;
     }
 
-    public void setClassroomId(String classroomId) {
-        this.classroomId = classroomId;
-    }
-
     public String getCreatedBy() {
         return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     public String getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
     public String getClassTeacher() {
         return classTeacher;
-    }
-
-    public void setClassTeacher(String classTeacher) {
-        this.classTeacher = classTeacher;
     }
 
     public List<SubjectTeacher> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<SubjectTeacher> subjects) {
-        this.subjects = subjects;
-    }
-
     public List<Representative> getRepresentatives() {
         return representatives;
-    }
-
-    public void setRepresentatives(List<Representative> representatives) {
-        this.representatives = representatives;
     }
 
     public String getBatch() {
         return batch;
     }
 
-    public void setBatch(String batch) {
-        this.batch = batch;
-    }
-
-    public TimeTable getTimeTable() {
+    public String getTimeTable() {
         return timeTable;
-    }
-
-    public void setTimeTable(TimeTable timeTable) {
-        this.timeTable = timeTable;
     }
 
     public List<String> getStudents() {
         return students;
     }
 
-    public void setStudents(List<String> students) {
-        this.students = students;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setClassroomId(String classroomId) {
+        this.classroomId = classroomId;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setClassTeacher(String classTeacher) {
+        this.classTeacher = classTeacher;
+    }
+
+    public void setSubjects(List<SubjectTeacher> subjects) {
+        this.subjects = subjects;
+    }
+
+    public void setRepresentatives(List<Representative> representatives) {
+        this.representatives = representatives;
+    }
+
+    public void setBatch(String batch) {
+        this.batch = batch;
+    }
+
+    public void setTimeTable(String timeTable) {
+        this.timeTable = timeTable;
+    }
+
+    public void setStudents(List<String> students) {
+        this.students = students;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
