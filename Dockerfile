@@ -1,11 +1,12 @@
-# Use official OpenJDK image as base
-FROM openjdk:17-jdk-slim
-
-# Set the working directory
+# Stage 1: build the application using Maven
+FROM maven:3.8.6-openjdk-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy the jar file into the container
-COPY target/schoolerpbackend-0.0.1-SNAPSHOT.jar app.jar
-
-# Run the jar file
+# Stage 2: run the application
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
