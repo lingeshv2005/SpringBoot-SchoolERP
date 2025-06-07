@@ -110,7 +110,7 @@ const studentSchema = new Schema({
   createdBy: { type: String, required: true },
   updatedBy: { type: String, required: true },
   user: { type: String, required: true, unique: true },
-  classroom: { type: String, required: true },
+  classroom: { type: String },
   parent: { type: String },
   admissionNumber: { type: String, required: true, unique: true },
   dateOfBirth: { type: Date },
@@ -122,9 +122,9 @@ const studentSchema = new Schema({
 const parentSchema = new Schema({
   parentId: { type: String, required: true, unique: true },
   user: { type: String, required: true, unique: true },
-  Name: { type: String, required: String },
-  Phone: { type: String, required: String },
-  Email: { type: String },
+  name: { type: String, required: true },
+  phone: { type: String, required: true },
+  email: { type: String },
   children: [{ type: String }],
   notifications: [{ type: String }],
   createdBy: { type: String, required: true },
@@ -191,9 +191,12 @@ const examControllerHeadSchema = new Schema({
 // ✅ Question Paper Schema
 const questionPaperSchema = new Schema({
   questionPaperId: { type: String, required: true, unique: true },
-  paperFileUrl: { type: String, required: true },
+  questionPaperUrl: { type: String, required: true },
   hodApproval: { type: Boolean, default: false },
   message: { type: String, required: true },
+  department: { type: String, required: true },
+  subject: { type: String, required: true },
+  exam: { type: String, required: true },
   createdBy: { type: String, required: true },
   updatedBy: { type: String, required: true },
 }, { timestamps: true });
@@ -201,13 +204,13 @@ const questionPaperSchema = new Schema({
 // ✅ Exam Schema
 const examSchema = new Schema({
   examId: { type: String, required: true, unique: true },
-  examId: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   date: { type: Date, required: true },
   approvedBy: { type: String },
   createdBy: { type: String, required: true },
   assignedTimetables: [{
     tableUrl: { type: String },
+    message: { type: String, required: true },
     assignedAt: { type: Date, default: Date.now },
     approvalStatus: { type: Boolean, default: false },
     startDate: { type: Date, required: true },
@@ -221,15 +224,18 @@ const examSchema = new Schema({
 const examInvigilationSchema = new Schema({
   examInvigilationId: { type: String, required: true, unique: true },
   exam: { type: String, required: true },
-  classroom: { type: String, required: true },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true },
-  students: [{ type: String }],
-  invigilators: [{ type: String }],
-  questionPaper: [{
-    total: { type: Number },
-    fileUrl: { type: String }
+  hall: { type: String, required: true },
+  startTime: { type: Date, required: true },
+  endTime: { type: Date, required: true },
+  students: [{
+    fromTo: { type: String, required: true },
+    classroom: { type: String, required: true },
+    subject: { type: String, required: true },
+    capacity: { type: Number, default: 0 },
+    questionPaperUrl: { type: String }
   }],
+  invigilators: [{ type: String }],
+  approvedBy: { type: String },
   createdBy: { type: String, required: true },
   updatedBy: { type: String, required: true },
 }, { timestamps: true });
@@ -239,13 +245,13 @@ const examResultSchema = new Schema({
   examResultId: { type: String, required: true, unique: true },
   exam: { type: String, required: true },
   classroom: { type: String, required: true },
+  subject: { type: String, required: true },
   students: [{
     student: { type: String, required: true },
     gradeValue: { type: String, required: true },
     comments: { type: String }
   }],
   approvedBy: { type: String },
-  subject: { type: String, required: true },
   updatedBy: { type: String, required: true },
   createdBy: { type: String, required: true }
 }, { timestamps: true });
@@ -348,14 +354,13 @@ const notificationSchema = new Schema({
 //    assignSubjects✅
 //    assignClassTeacher✅
 
-//    Create student 
-//    Add student to classroom
-//    Create parent
-//    assignRepresentatives
+//    Create student✅
+//    Add student to classroom✅
+//    Create parent and assign parent to student✅
 
 
-//    Create exam controller
-//    Create exam controller head
+//    Create exam controller✅
+//    Create exam controller head✅
 
 // By Exam Controller Head
 // 		Create exam
@@ -380,6 +385,7 @@ const notificationSchema = new Schema({
 // 		Create exam result
 
 // By Teacher
+//    assignRepresentatives
 // 		Update exam marks
 
 // By Exam Controller Head

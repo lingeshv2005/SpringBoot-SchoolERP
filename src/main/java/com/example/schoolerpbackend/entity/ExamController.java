@@ -1,81 +1,59 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "exam_controllers", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "examControllerId"),
-    @UniqueConstraint(columnNames = "user")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+
+@Document(collection = "exam_controllers")
 public class ExamController {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String examControllerId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String examControllerId = UUID.randomUUID().toString();
 
-    @Column(nullable = false, unique = true)
-    private String user;
+    @NotBlank
+    @Indexed(unique = true)
+    private String user; // Reference to User.userId
 
-    @ElementCollection
-    @CollectionTable(name = "exam_controller_invigilations")
-    private List<AssignedInvigilation> assignedInvigilations;
+    private List<String> assignedInvigilations = new ArrayList<>();
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Embeddable
-    public static class AssignedInvigilation {
-        private String examInvigilation;
-        private LocalDateTime assignedAt;
-
-        // Getters and Setters
-        public String getExamInvigilation() {
-            return examInvigilation;
-        }
-
-        public void setExamInvigilation(String examInvigilation) {
-            this.examInvigilation = examInvigilation;
-        }
-
-        public LocalDateTime getAssignedAt() {
-            return assignedAt;
-        }
-
-        public void setAssignedAt(LocalDateTime assignedAt) {
-            this.assignedAt = assignedAt;
-        }
+    public ExamController() {
+        this.examControllerId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    // Getters and setters
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -95,11 +73,11 @@ public class ExamController {
         this.user = user;
     }
 
-    public List<AssignedInvigilation> getAssignedInvigilations() {
+    public List<String> getAssignedInvigilations() {
         return assignedInvigilations;
     }
 
-    public void setAssignedInvigilations(List<AssignedInvigilation> assignedInvigilations) {
+    public void setAssignedInvigilations(List<String> assignedInvigilations) {
         this.assignedInvigilations = assignedInvigilations;
     }
 

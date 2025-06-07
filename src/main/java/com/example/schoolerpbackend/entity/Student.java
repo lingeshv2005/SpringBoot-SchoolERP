@@ -2,84 +2,69 @@ package com.example.schoolerpbackend.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "students", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "studentId"),
-    @UniqueConstraint(columnNames = "user"),
-    @UniqueConstraint(columnNames = "admissionNumber")
-})
+import jakarta.validation.constraints.NotBlank;
+
+@Document(collection = "students")
 public class Student {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String studentId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String studentId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(nullable = false, unique = true)
-    private String user;
+    @NotBlank
+    @Indexed(unique = true)
+    private String user; // Reference to User.userId
 
-    @Column(nullable = false)
-    private String classroom;
+    private String classroom; // Reference to Classroom.classroomId
 
-    @Column
-    private String parent;
+    private String parent; // Reference to Parent.parentId (optional)
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Indexed(unique = true)
     private String admissionNumber;
 
-    @Column
     private LocalDateTime dateOfBirth;
 
-    @ElementCollection
-    @Column
-    private List<String> attendanceRecord;
+    private List<String> attendanceRecord; // References to Attendance.attendanceId or raw strings
 
-    @ElementCollection
-    private Map<String, Object> others;
+    private Object others; // JSON-style mixed object (custom metadata)
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public Student() {
+        this.studentId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     // Getters and Setters
-    public Long getId() {
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -155,11 +140,11 @@ public class Student {
         this.attendanceRecord = attendanceRecord;
     }
 
-    public Map<String, Object> getOthers() {
+    public Object getOthers() {
         return others;
     }
 
-    public void setOthers(Map<String, Object> others) {
+    public void setOthers(Object others) {
         this.others = others;
     }
 

@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.schoolerpbackend.entity.Admin;
+import com.example.schoolerpbackend.entity.ExamControllerHead;
 import com.example.schoolerpbackend.entity.Hod;
 import com.example.schoolerpbackend.entity.Principal;
 import com.example.schoolerpbackend.repository.AdminRepository;
 import com.example.schoolerpbackend.repository.HodRepository;
 import com.example.schoolerpbackend.repository.PrincipalRepository;
+import com.example.schoolerpbackend.repository.ExamControllerHeadRepository;
 
 @RestController
 @RequestMapping("/admin")
@@ -33,6 +35,9 @@ public class AdminController {
 
     @Autowired
     private HodRepository hodRepository;
+
+    @Autowired
+    private ExamControllerHeadRepository examControllerHeadRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -95,6 +100,18 @@ public class AdminController {
                 hod.setCreatedAt(LocalDateTime.now());
                 hod.setUpdatedAt(LocalDateTime.now());
                 hodRepository.save(hod);
+            }
+
+            // If role is ExamControllerHead, create ExamControllerHead document
+            if (admin.getRoleName() == Admin.RoleName.EXAM_CONTROLLER_HEAD) {
+                ExamControllerHead examControllerHead = new ExamControllerHead();
+                examControllerHead.setExamControllerHeadId(UUID.randomUUID().toString());
+                examControllerHead.setAdmin(savedAdmin.getAdminId());
+                examControllerHead.setCreatedBy(ucId);
+                examControllerHead.setUpdatedBy(ucId);
+                examControllerHead.setCreatedAt(LocalDateTime.now());
+                examControllerHead.setUpdatedAt(LocalDateTime.now());
+                examControllerHeadRepository.save(examControllerHead);
             }
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);

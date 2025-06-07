@@ -1,116 +1,64 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "exam_controller_heads", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "examControllerHeadId"),
-    @UniqueConstraint(columnNames = "user")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+
+@Document(collection = "exam_controller_heads")
 public class ExamControllerHead {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String examControllerHeadId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String examControllerHeadId = UUID.randomUUID().toString();
 
-    @Column(nullable = false, unique = true)
-    private String user;
+    @NotBlank
+    @Indexed(unique = true)
+    private String admin; // Reference to Admin.adminId
 
-    @ElementCollection
-    @Column
-    private List<String> createdExams;
+    private List<String> createdExams; // References Exam.examId
 
-    @ElementCollection
-    @Column
-    private List<String> approvedResults;
+    private List<String> approvedResults; // References ExamResult.resultId
 
-    @ElementCollection
-    @CollectionTable(name = "exam_controller_head_invigilations")
-    private List<ApprovedInvigilation> approvedInvigilations;
+    private List<String> approvedInvigilations;
 
-    @ElementCollection
-    @CollectionTable(name = "exam_controller_head_question_papers")
-    private List<CollectedQuestionPaper> collectedQuestionPapers;
+    private List<String> collectedQuestionPapers;
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Embeddable
-    public static class ApprovedInvigilation {
-        private String examInvigilation;
-        private LocalDateTime approvedAt;
-
-        // Getters and Setters
-        public String getExamInvigilation() {
-            return examInvigilation;
-        }
-
-        public void setExamInvigilation(String examInvigilation) {
-            this.examInvigilation = examInvigilation;
-        }
-
-        public LocalDateTime getApprovedAt() {
-            return approvedAt;
-        }
-
-        public void setApprovedAt(LocalDateTime approvedAt) {
-            this.approvedAt = approvedAt;
-        }
+    public ExamControllerHead() {
+        this.examControllerHeadId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    @Embeddable
-    public static class CollectedQuestionPaper {
-        private String exam;
-        private String questionPaper;
+    // Getters and Setters for main class fields
 
-        // Getters and Setters
-        public String getExam() {
-            return exam;
-        }
-
-        public void setExam(String exam) {
-            this.exam = exam;
-        }
-
-        public String getQuestionPaper() {
-            return questionPaper;
-        }
-
-        public void setQuestionPaper(String questionPaper) {
-            this.questionPaper = questionPaper;
-        }
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -122,12 +70,12 @@ public class ExamControllerHead {
         this.examControllerHeadId = examControllerHeadId;
     }
 
-    public String getUser() {
-        return user;
+    public String getAdmin() {
+        return admin;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
     public List<String> getCreatedExams() {
@@ -146,19 +94,19 @@ public class ExamControllerHead {
         this.approvedResults = approvedResults;
     }
 
-    public List<ApprovedInvigilation> getApprovedInvigilations() {
+    public List<String> getApprovedInvigilations() {
         return approvedInvigilations;
     }
 
-    public void setApprovedInvigilations(List<ApprovedInvigilation> approvedInvigilations) {
+    public void setApprovedInvigilations(List<String> approvedInvigilations) {
         this.approvedInvigilations = approvedInvigilations;
     }
 
-    public List<CollectedQuestionPaper> getCollectedQuestionPapers() {
+    public List<String> getCollectedQuestionPapers() {
         return collectedQuestionPapers;
     }
 
-    public void setCollectedQuestionPapers(List<CollectedQuestionPaper> collectedQuestionPapers) {
+    public void setCollectedQuestionPapers(List<String> collectedQuestionPapers) {
         this.collectedQuestionPapers = collectedQuestionPapers;
     }
 
