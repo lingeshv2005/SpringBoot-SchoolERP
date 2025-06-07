@@ -2,6 +2,7 @@ package com.example.schoolerpbackend.controller;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.schoolerpbackend.entity.Admin;
+import com.example.schoolerpbackend.entity.Hod;
+import com.example.schoolerpbackend.entity.Principal;
 import com.example.schoolerpbackend.repository.AdminRepository;
+import com.example.schoolerpbackend.repository.HodRepository;
+import com.example.schoolerpbackend.repository.PrincipalRepository;
 
 @RestController
 @RequestMapping("/admin")
@@ -22,6 +27,12 @@ public class AdminController {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private PrincipalRepository principalRepository;
+
+    @Autowired
+    private HodRepository hodRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -60,6 +71,32 @@ public class AdminController {
 
             // Save admin
             Admin savedAdmin = adminRepository.save(admin);
+
+            // If role is PRINCIPAL, also create a Principal record
+            if (admin.getRoleName() == Admin.RoleName.PRINCIPAL) {
+                Principal principal = new Principal();
+                principal.setAdmin(savedAdmin.getAdminId());
+                principal.setPrincipalId(UUID.randomUUID().toString());
+                principal.setCreatedBy(ucId);
+                principal.setUpdatedBy(ucId);
+                principal.setCreatedAt(LocalDateTime.now());
+                principal.setUpdatedAt(LocalDateTime.now());
+
+                principalRepository.save(principal);
+            }
+
+            // If role is HOD, create HOD document
+            if (admin.getRoleName() == Admin.RoleName.HOD) {
+                Hod hod = new Hod();
+                hod.setHodId(UUID.randomUUID().toString());
+                hod.setAdmin(savedAdmin.getAdminId());
+                hod.setCreatedBy(ucId);
+                hod.setUpdatedBy(ucId);
+                hod.setCreatedAt(LocalDateTime.now());
+                hod.setUpdatedAt(LocalDateTime.now());
+                hodRepository.save(hod);
+            }
+
             return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
 
         } catch (Exception e) {

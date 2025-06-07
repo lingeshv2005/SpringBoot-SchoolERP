@@ -2,78 +2,65 @@ package com.example.schoolerpbackend.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "teachers", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "teacherId"),
-    @UniqueConstraint(columnNames = "user")
-})
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Document(collection = "teachers")
 public class Teacher {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String teacherId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String teacherId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(nullable = false, unique = true)
-    private String user;
+    @NotBlank
+    @Indexed(unique = true)
+    private String user; // Reference to User.userId
 
-    @ElementCollection
-    @Column(nullable = false)
-    private List<String> department;
+    @NotNull
+    private List<String> department; // References Department.departmentId
 
-    @ElementCollection
-    @Column
-    private List<String> handlingSubjects;
+    private List<String> handlingSubjects; // References Subject.subjectId
 
-    @Column
-    private String classTeacher;
+    private String classTeacher; // References Class.classId
 
-    @ElementCollection
-    @Column
-    private List<String> leaveRequests;
+    private List<String> leaveRequests; // References LeaveRequest.leaveRequestId
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public Teacher() {
+        this.teacherId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     // Getters and Setters
-    public Long getId() {
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

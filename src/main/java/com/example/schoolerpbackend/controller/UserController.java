@@ -2,6 +2,7 @@ package com.example.schoolerpbackend.controller;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.schoolerpbackend.entity.User;
 import com.example.schoolerpbackend.entity.Admin;
-import com.example.schoolerpbackend.repository.UserRepository;
+import com.example.schoolerpbackend.entity.Teacher;
+import com.example.schoolerpbackend.entity.User;
 import com.example.schoolerpbackend.repository.AdminRepository;
+import com.example.schoolerpbackend.repository.TeacherRepository;
+import com.example.schoolerpbackend.repository.UserRepository;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,6 +30,9 @@ public class UserController {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private TeacherRepository teacherRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -65,6 +71,18 @@ public class UserController {
 
             // Save user
             User savedUser = userRepository.save(user);
+
+            if (user.getRoleName() == User.RoleName.TEACHER) {
+                Teacher teacher = new Teacher();
+                teacher.setTeacherId(UUID.randomUUID().toString());
+                teacher.setUser(savedUser.getUserId()); // Link userId
+                teacher.setCreatedBy(ucId);
+                teacher.setUpdatedBy(ucId);
+                teacher.setCreatedAt(LocalDateTime.now());
+                teacher.setUpdatedAt(LocalDateTime.now());
+                teacherRepository.save(teacher);
+            }
+
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 
         } catch (Exception e) {

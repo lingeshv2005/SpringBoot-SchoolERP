@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.example.schoolerpbackend.entity.Department;
 
 public interface DepartmentRepository extends MongoRepository<Department, String> {
-    Optional<Department> findByDepartmentId(String departmentId);
     Optional<Department> findByName(String name);
+    Optional<Department> findByDepartmentId(String departmentId);
 }

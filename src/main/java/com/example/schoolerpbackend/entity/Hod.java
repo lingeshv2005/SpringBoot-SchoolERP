@@ -1,65 +1,69 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "hods", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "hodId"),
-    @UniqueConstraint(columnNames = "user")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+
+@Document(collection = "hods")
 public class Hod {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String hodId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String hodId = UUID.randomUUID().toString();
 
-    @Column(nullable = false, unique = true)
-    private String user;
+    @NotBlank
+    @Indexed(unique = true)
+    private String admin; // Reference to Admin.adminId
 
-    @Column(nullable = false)
-    private String department;
+    private String department; // Reference to Department.departmentId
 
-    @ElementCollection
-    @Column
-    private List<String> approvedPapers;
+    private List<String> approvedpapers;
 
-    @ElementCollection
-    @Column
     private List<String> approvedLeaves;
 
-    @ElementCollection
-    @CollectionTable(name = "hod_performance_reports")
     private List<PerformanceReport> performanceReports;
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Embeddable
+    public Hod() {
+        this.hodId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Inner class for performance report
     public static class PerformanceReport {
-        private String className;
+        private String clazz;
         private LocalDateTime generatedAt;
         private String fileUrl;
 
-        // Getters and Setters
-        public String getClassName() {
-            return className;
+        public String getClazz() {
+            return clazz;
         }
 
-        public void setClassName(String className) {
-            this.className = className;
+        public void setClazz(String clazz) {
+            this.clazz = clazz;
         }
 
         public LocalDateTime getGeneratedAt() {
@@ -79,23 +83,12 @@ public class Hod {
         }
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -107,12 +100,12 @@ public class Hod {
         this.hodId = hodId;
     }
 
-    public String getUser() {
-        return user;
+    public String getAdmin() {
+        return admin;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
     public String getDepartment() {
@@ -123,12 +116,12 @@ public class Hod {
         this.department = department;
     }
 
-    public List<String> getApprovedPapers() {
-        return approvedPapers;
+    public List<String> getApprovedpapers() {
+        return approvedpapers;
     }
 
-    public void setApprovedPapers(List<String> approvedPapers) {
-        this.approvedPapers = approvedPapers;
+    public void setApprovedpapers(List<String> approvedpapers) {
+        this.approvedpapers = approvedpapers;
     }
 
     public List<String> getApprovedLeaves() {

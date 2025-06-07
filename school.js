@@ -136,15 +136,10 @@ const parentSchema = new Schema({
 // ✅ Principal Schema
 const principalSchema = new Schema({
   principalId: { type: String, required: true, unique: true },
-  user: { type: String, required: true, unique: true },
+  admin: { type: String, required: true, unique: true },
   approvedLeaves: [{ type: String }],
   approvedExams: [{ type: String }],
-  managedDisciplinaryActions: [{
-    student: { type: String },
-    action: { type: String },
-    date: { type: Date, default: Date.now },
-    description: String
-  }],
+  managedDisciplinaryActions: [{ type: String }],
   createdBy: { type: String, required: true },
   updatedBy: { type: String, required: true }
 }, { timestamps: true });
@@ -152,8 +147,8 @@ const principalSchema = new Schema({
 // ✅ HOD Schema
 const hodSchema = new Schema({
   hodId: { type: String, required: true, unique: true },
-  user: { type: String, required: true, unique: true },
-  department: { type: String, required: true },
+  admin: { type: String, required: true, unique: true },
+  department: { type: String },
   approvedpapers: [{ type: String }],
   approvedLeaves: [{ type: String }],
   performanceReports: [{
@@ -180,7 +175,7 @@ const examControllerSchema = new Schema({
 // ✅ Exam Controller Head Schema
 const examControllerHeadSchema = new Schema({
   examControllerHeadId: { type: String, required: true, unique: true },
-  user: { type: String, required: true, unique: true },
+  admin: { type: String, required: true, unique: true },
   createdExams: [{ type: String }],
   approvedResults: [{ type: String }],
   approvedInvigilations: [{
@@ -334,3 +329,59 @@ const notificationSchema = new Schema({
     default: 'PENDING'
   }
 }, { timestamps: true });
+
+
+// /auth
+// /initialregister -> firstadmin
+
+// By Admin
+//    Create Principal✅
+// 		Create department✅
+// 	  Create subjects✅
+
+// 		Create hod✅
+// 		Add hod to department✅
+
+// 	  Create teacher✅
+//    Add teacher to department✅
+//    Add teacher to handling subjects✅
+
+//    Create classroom
+//    Create student 
+//    Add student to classroom
+//    Create parent
+
+//    Create exam controller
+//    Create exam controller head
+
+// By Exam Controller Head
+// 		Create exam
+// 		Get approval by principal
+
+// 		Assign timetable 
+// 		Get approval by principal
+
+// By Teacher 
+// 		Create question paper
+// 		Get approval by hod
+
+// By Exam Controller Head
+// 		Create invigilation 
+		
+// By Exam Controller
+// 		Assign invigilators and students
+
+// By Exam Controller Head
+// 		Assign question papers
+		
+// 		Create exam result
+
+// By Teacher
+// 		Update exam marks
+
+// By Exam Controller Head
+// 		Approve exam result
+
+// By Students and parents 
+// 		See results
+

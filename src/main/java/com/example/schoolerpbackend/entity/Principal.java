@@ -1,107 +1,61 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "principals", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "principalId"),
-    @UniqueConstraint(columnNames = "user")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+
+@Document(collection = "principals")
 public class Principal {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String principalId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String principalId = UUID.randomUUID().toString();
 
-    @Column(nullable = false, unique = true)
-    private String user;
+    @NotBlank
+    @Indexed(unique = true)
+    private String admin;  // Reference to admin.adminId
 
-    @ElementCollection
-    @Column
     private List<String> approvedLeaves;
 
-    @ElementCollection
-    @Column
     private List<String> approvedExams;
 
-    @ElementCollection
-    @CollectionTable(name = "principal_disciplinary_actions")
-    private List<DisciplinaryAction> managedDisciplinaryActions;
+    private List<String> managedDisciplinaryActions;
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Embeddable
-    public static class DisciplinaryAction {
-        private String student;
-        private String action;
-        private LocalDateTime date;
-        private String description;
-
-        // Getters and Setters
-        public String getStudent() {
-            return student;
-        }
-
-        public void setStudent(String student) {
-            this.student = student;
-        }
-
-        public String getAction() {
-            return action;
-        }
-
-        public void setAction(String action) {
-            this.action = action;
-        }
-
-        public LocalDateTime getDate() {
-            return date;
-        }
-
-        public void setDate(LocalDateTime date) {
-            this.date = date;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public Principal() {
+        this.principalId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -113,12 +67,12 @@ public class Principal {
         this.principalId = principalId;
     }
 
-    public String getUser() {
-        return user;
+    public String getAdmin() {
+        return admin;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
     public List<String> getApprovedLeaves() {
@@ -137,11 +91,11 @@ public class Principal {
         this.approvedExams = approvedExams;
     }
 
-    public List<DisciplinaryAction> getManagedDisciplinaryActions() {
+    public List<String> getManagedDisciplinaryActions() {
         return managedDisciplinaryActions;
     }
 
-    public void setManagedDisciplinaryActions(List<DisciplinaryAction> managedDisciplinaryActions) {
+    public void setManagedDisciplinaryActions(List<String> managedDisciplinaryActions) {
         this.managedDisciplinaryActions = managedDisciplinaryActions;
     }
 

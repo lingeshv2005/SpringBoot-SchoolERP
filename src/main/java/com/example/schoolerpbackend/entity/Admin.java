@@ -32,6 +32,7 @@ public class Admin {
     @NotBlank
     private String email;
 
+    @NotBlank
     private String phoneNumber;
 
     @NotNull
