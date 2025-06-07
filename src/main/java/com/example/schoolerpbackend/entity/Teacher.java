@@ -44,6 +44,8 @@ public class Teacher {
 
     private List<String> handlingClasses; // References Class.classId
 
+    private List<String> createdQuestionPapers; // References QuestionPaper.questionPaperId
+
     @CreatedDate
     private LocalDateTime createdAt;
     
@@ -64,6 +66,14 @@ public class Teacher {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<String> getCreatedQuestionPapers() {
+        return createdQuestionPapers;
+    }
+
+    public void setCreatedQuestionPapers(List<String> createdQuestionPapers) {
+        this.createdQuestionPapers = createdQuestionPapers;
     }
 
     public String getTeacherId() {

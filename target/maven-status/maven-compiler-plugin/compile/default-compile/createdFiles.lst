@@ -1,4 +1,3 @@
-com\example\schoolerpbackend\entity\ExamController$AssignedInvigilation.class
 com\example\schoolerpbackend\entity\Classroom$SubjectTeacher.class
 com\example\schoolerpbackend\entity\User.class
 com\example\schoolerpbackend\entity\AttendanceRecord$Status.class
@@ -18,7 +17,6 @@ com\example\schoolerpbackend\entity\Teacher.class
 com\example\schoolerpbackend\entity\Admin$RoleName.class
 com\example\schoolerpbackend\repository\TeacherRepository.class
 com\example\schoolerpbackend\controller\SubjectController$AssignSubjectTeacherRequest.class
-com\example\schoolerpbackend\entity\ExamControllerHead$ApprovedInvigilation.class
 com\example\schoolerpbackend\repository\DepartmentRepository.class
 com\example\schoolerpbackend\entity\Notification$Status.class
 com\example\schoolerpbackend\entity\ExamController.class
@@ -30,7 +28,6 @@ com\example\schoolerpbackend\repository\HodRepository.class
 com\example\schoolerpbackend\entity\Notification$AllRecipient.class
 com\example\schoolerpbackend\repository\UserRepository.class
 com\example\schoolerpbackend\entity\Subject.class
-com\example\schoolerpbackend\entity\ExamControllerHead$CollectedQuestionPaper.class
 com\example\schoolerpbackend\entity\Notification.class
 com\example\schoolerpbackend\entity\Department.class
 com\example\schoolerpbackend\entity\Student.class

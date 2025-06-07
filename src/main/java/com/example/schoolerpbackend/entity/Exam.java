@@ -1,62 +1,117 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "exams", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "examId")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Document(collection = "exams")
 public class Exam {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String examId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String examId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
+    @NotBlank
     private String name;
 
-    @Column(nullable = false)
-    private LocalDateTime date;
+    @NotNull
+    private LocalDate date;
 
-    @Column
-    private String approvedBy;
-
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @ElementCollection
-    @CollectionTable(name = "exam_timetables")
     private List<AssignedTimetable> assignedTimetables;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Embeddable
+    public Exam() {
+        this.examId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Nested class for AssignedTimetable
     public static class AssignedTimetable {
+
+        @NotBlank
+        @Indexed(unique = true)
+        private String assignedTimeTableId = UUID.randomUUID().toString();
+
         private String tableUrl;
-        private LocalDateTime assignedAt;
-        private boolean approvalStatus = false;
-        private LocalDateTime startDate;
-        private LocalDateTime endDate;
+
+        @NotBlank
+        private String message;
+
+        private LocalDateTime assignedAt = LocalDateTime.now();
+
+        private Boolean approvalStatus = false;
+
+        @NotNull
+        private LocalDate startDate;
+
+        @NotNull
+        private LocalDate endDate;
+
         private String approvedBy;
 
-        // Getters and Setters
+        private LocalDateTime approvedAt;
+
+        public AssignedTimetable() {
+            this.assignedTimeTableId = UUID.randomUUID().toString();
+            this.assignedAt = LocalDateTime.now();
+            this.approvalStatus = false;
+        }
+
+        public LocalDateTime getApprovedAt() {
+            return approvedAt;
+        }
+
+        public void setApprovedAt(LocalDateTime approvedAt) {
+            this.approvedAt = approvedAt;
+        }
+
+        public String getAssignedTimeTableId() {
+            return assignedTimeTableId;
+        }
+
+        public void setAssignedTimeTableId(String assignedTimeTableId) {
+            this.assignedTimeTableId = assignedTimeTableId;
+        }
+        
         public String getTableUrl() {
             return tableUrl;
         }
 
         public void setTableUrl(String tableUrl) {
             this.tableUrl = tableUrl;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
 
         public LocalDateTime getAssignedAt() {
@@ -67,27 +122,27 @@ public class Exam {
             this.assignedAt = assignedAt;
         }
 
-        public boolean isApprovalStatus() {
+        public Boolean getApprovalStatus() {
             return approvalStatus;
         }
 
-        public void setApprovalStatus(boolean approvalStatus) {
+        public void setApprovalStatus(Boolean approvalStatus) {
             this.approvalStatus = approvalStatus;
         }
 
-        public LocalDateTime getStartDate() {
+        public LocalDate getStartDate() {
             return startDate;
         }
 
-        public void setStartDate(LocalDateTime startDate) {
+        public void setStartDate(LocalDate startDate) {
             this.startDate = startDate;
         }
 
-        public LocalDateTime getEndDate() {
+        public LocalDate getEndDate() {
             return endDate;
         }
 
-        public void setEndDate(LocalDateTime endDate) {
+        public void setEndDate(LocalDate endDate) {
             this.endDate = endDate;
         }
 
@@ -100,23 +155,13 @@ public class Exam {
         }
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     // Getters and Setters
-    public Long getId() {
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -136,20 +181,12 @@ public class Exam {
         this.name = name;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public String getApprovedBy() {
-        return approvedBy;
-    }
-
-    public void setApprovedBy(String approvedBy) {
-        this.approvedBy = approvedBy;
     }
 
     public String getCreatedBy() {

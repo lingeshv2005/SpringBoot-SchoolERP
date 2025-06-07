@@ -32,8 +32,6 @@ public class ExamControllerHead {
 
     private List<String> approvedInvigilations;
 
-    private List<String> collectedQuestionPapers;
-
     @NotBlank
     private String createdBy;
 
@@ -100,14 +98,6 @@ public class ExamControllerHead {
 
     public void setApprovedInvigilations(List<String> approvedInvigilations) {
         this.approvedInvigilations = approvedInvigilations;
-    }
-
-    public List<String> getCollectedQuestionPapers() {
-        return collectedQuestionPapers;
-    }
-
-    public void setCollectedQuestionPapers(List<String> collectedQuestionPapers) {
-        this.collectedQuestionPapers = collectedQuestionPapers;
     }
 
     public String getCreatedBy() {

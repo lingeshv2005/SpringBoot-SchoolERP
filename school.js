@@ -229,7 +229,6 @@ const examInvigilationSchema = new Schema({
   endTime: { type: Date, required: true },
   students: [{
     fromTo: { type: String, required: true },
-    classroom: { type: String, required: true },
     subject: { type: String, required: true },
     capacity: { type: Number, default: 0 },
     questionPaperUrl: { type: String }
@@ -363,21 +362,17 @@ const notificationSchema = new Schema({
 //    Create exam controller head✅
 
 // By Exam Controller Head
-// 		Create exam
-// 		Get approval by principal
-
-// 		Assign timetable 
-// 		Get approval by principal
+// 		Create exam✅
+// 		Assign timetable✅
+// 		Get approval by principal✅
 
 // By Teacher 
-// 		Create question paper
-// 		Get approval by hod
-
-// By Exam Controller Head
-// 		Create invigilation 
+// 		Create question paper✅
+// 		Get approval by hod✅
 		
 // By Exam Controller
-// 		Assign invigilators and students
+//    Create exam invigilation✅
+// 		Assign invigilators and students✅
 
 // By Exam Controller Head
 // 		Assign question papers
@@ -385,7 +380,6 @@ const notificationSchema = new Schema({
 // 		Create exam result
 
 // By Teacher
-//    assignRepresentatives
 // 		Update exam marks
 
 // By Exam Controller Head
@@ -393,4 +387,17 @@ const notificationSchema = new Schema({
 
 // By Students and parents 
 // 		See results
+
+// By Teacher
+//    assignRepresentatives
+//    createLeaveRequest
+
+// By Principal
+//    approveLeaveRequest
+
+// By  Teacher 
+//    create attendance record
+
+// By Principal
+//    createDisciplinaryActions
 

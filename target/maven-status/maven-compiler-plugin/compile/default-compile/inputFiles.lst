@@ -6,11 +6,14 @@ C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\c
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\ClassroomController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\DepartmentController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\ExamController.java
+C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\ExamControllerHeadController.java
+C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\HodController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\NotificationController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\ParentController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\PrincipalController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\StudentController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\SubjectController.java
+C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\TeacherController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\controller\UserController.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\entity\Admin.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\entity\AttendanceRecord.java
@@ -38,6 +41,8 @@ C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\r
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\ClassroomRepository.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\DepartmentRepository.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\DisciplineRecordRepository.java
+C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\ExamControllerHeadRepository.java
+C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\ExamControllerRepository.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\ExamInvigilationRepository.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\ExamRepository.java
 C:\ALLOTHER\Spring\schoolerpbackend\src\main\java\com\example\schoolerpbackend\repository\ExamResultRepository.java

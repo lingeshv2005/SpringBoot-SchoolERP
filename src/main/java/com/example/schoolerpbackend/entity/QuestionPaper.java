@@ -1,97 +1,122 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Entity
-@Table(name = "question_papers", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "questionPaperId")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+
+@Document(collection = "questionPapers")
 public class QuestionPaper {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String questionPaperId;
+    @NotBlank
+    @Indexed(unique = true)
+    private String questionPaperId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
-    private String paperFileUrl;
+    @NotBlank
+    private String questionPaperUrl;
 
-    @Column(nullable = false)
-    private boolean hodApproval = false;
+    private Boolean hodApproval = false;
 
-    @Column(nullable = false)
+    @NotBlank
     private String message;
 
-    @Column(nullable = false)
+    @NotBlank
+    private String department;
+
+    @NotBlank
+    private String subject;
+
+    @NotBlank
+    private String exam;
+
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public QuestionPaper() {
+        this.questionPaperId = UUID.randomUUID().toString();
+        this.hodApproval = false;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
-
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     public String getQuestionPaperId() {
         return questionPaperId;
     }
-
     public void setQuestionPaperId(String questionPaperId) {
         this.questionPaperId = questionPaperId;
     }
 
-    public String getPaperFileUrl() {
-        return paperFileUrl;
+    public String getQuestionPaperUrl() {
+        return questionPaperUrl;
+    }
+    public void setQuestionPaperUrl(String questionPaperUrl) {
+        this.questionPaperUrl = questionPaperUrl;
     }
 
-    public void setPaperFileUrl(String paperFileUrl) {
-        this.paperFileUrl = paperFileUrl;
-    }
-
-    public boolean isHodApproval() {
+    public Boolean getHodApproval() {
         return hodApproval;
     }
-
-    public void setHodApproval(boolean hodApproval) {
+    public void setHodApproval(Boolean hodApproval) {
         this.hodApproval = hodApproval;
     }
 
     public String getMessage() {
         return message;
     }
-
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getExam() {
+        return exam;
+    }
+    public void setExam(String exam) {
+        this.exam = exam;
     }
 
     public String getCreatedBy() {
         return createdBy;
     }
-
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
@@ -99,7 +124,6 @@ public class QuestionPaper {
     public String getUpdatedBy() {
         return updatedBy;
     }
-
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
@@ -107,7 +131,6 @@ public class QuestionPaper {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
@@ -115,7 +138,6 @@ public class QuestionPaper {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }

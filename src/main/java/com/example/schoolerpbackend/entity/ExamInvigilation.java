@@ -1,97 +1,116 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "exam_invigilations", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "examInvigilationId")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Document(collection = "exam_invigilations")
 public class ExamInvigilation {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String examInvigilationId;
+    @NotBlank
+    private String examInvigilationId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
-    private String exam;
+    @NotBlank
+    private String exam; // reference to examId
 
-    @Column(nullable = false)
-    private String classroom;
+    @NotBlank
+    private String hall;
 
-    @Column(nullable = false)
-    private String startTime;
+    @NotNull
+    private LocalDateTime startTime;
 
-    @Column(nullable = false)
-    private String endTime;
+    @NotNull
+    private LocalDateTime endTime;
 
-    @ElementCollection
-    @Column
-    private List<String> students;
+    @NotNull
+    private List<StudentGroup> students;
 
-    @ElementCollection
-    @Column
     private List<String> invigilators;
 
-    @ElementCollection
-    @CollectionTable(name = "exam_invigilation_question_papers")
-    private List<QuestionPaperInfo> questionPaper;
+    private String approvedBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String createdBy;
 
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
+    @CreatedDate
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column
-    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Embeddable
-    public static class QuestionPaperInfo {
-        private int total;
-        private String fileUrl;
+    public ExamInvigilation() {
+        this.examInvigilationId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
-        // Getters and Setters
-        public int getTotal() {
-            return total;
+    // Inner class for students array
+    public static class StudentGroup {
+
+        @NotBlank
+        private String fromTo;
+
+        @NotBlank
+        private String subject;
+
+        private int capacity = 0;
+
+        private String questionPaperUrl;
+
+        public String getFromTo() {
+            return fromTo;
         }
 
-        public void setTotal(int total) {
-            this.total = total;
+        public void setFromTo(String fromTo) {
+            this.fromTo = fromTo;
         }
 
-        public String getFileUrl() {
-            return fileUrl;
+        public String getSubject() {
+            return subject;
         }
 
-        public void setFileUrl(String fileUrl) {
-            this.fileUrl = fileUrl;
+        public void setSubject(String subject) {
+            this.subject = subject;
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        public void setCapacity(int capacity) {
+            this.capacity = capacity;
+        }
+
+        public String getQuestionPaperUrl() {
+            return questionPaperUrl;
+        }
+
+        public void setQuestionPaperUrl(String questionPaperUrl) {
+            this.questionPaperUrl = questionPaperUrl;
         }
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    // Getters and setters for outer class
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -111,35 +130,35 @@ public class ExamInvigilation {
         this.exam = exam;
     }
 
-    public String getClassroom() {
-        return classroom;
+    public String getHall() {
+        return hall;
     }
 
-    public void setClassroom(String classroom) {
-        this.classroom = classroom;
+    public void setHall(String hall) {
+        this.hall = hall;
     }
 
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
-    public List<String> getStudents() {
+    public List<StudentGroup> getStudents() {
         return students;
     }
 
-    public void setStudents(List<String> students) {
+    public void setStudents(List<StudentGroup> students) {
         this.students = students;
     }
 
@@ -151,12 +170,12 @@ public class ExamInvigilation {
         this.invigilators = invigilators;
     }
 
-    public List<QuestionPaperInfo> getQuestionPaper() {
-        return questionPaper;
+    public String getApprovedBy() {
+        return approvedBy;
     }
 
-    public void setQuestionPaper(List<QuestionPaperInfo> questionPaper) {
-        this.questionPaper = questionPaper;
+    public void setApprovedBy(String approvedBy) {
+        this.approvedBy = approvedBy;
     }
 
     public String getCreatedBy() {
