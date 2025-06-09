@@ -392,12 +392,24 @@ const notificationSchema = new Schema({
 //    assignRepresentatives
 //    createLeaveRequest
 
-// By Principal
+// By Teacher or Hod
+//    createLeaveRequest
+
+// By Principal 
 //    approveLeaveRequest
 
-// By  Teacher 
+// By Student
+//    createLeaveRequest
+// By Hod
+//    approveLeaveRequest
+
+// By Teacher 
 //    create attendance record
 
 // By Principal
 //    createDisciplinaryActions
 
+//    createNotification
+
+// By HOD
+//    createNotification
