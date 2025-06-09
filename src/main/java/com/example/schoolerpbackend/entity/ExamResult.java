@@ -1,61 +1,72 @@
 package com.example.schoolerpbackend.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "exam_results", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "examResultId")
-})
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Document(collection = "exam_results")
 public class ExamResult {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String examResultId;
+    @NotBlank
+    private String examResultId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
-    private String exam;
+    @NotBlank
+    private String exam; // examId
 
-    @Column(nullable = false)
-    private String classroom;
+    @NotBlank
+    private String classroom; // classroomId
 
-    @ElementCollection
-    @CollectionTable(name = "exam_result_students")
-    private List<StudentResult> students;
+    @NotBlank
+    private String subject; // subjectId
 
-    @Column
+    @NotBlank
+    private String teacher; // teacherId
+
+    @NotNull
+    private List<StudentGrade> students;
+
     private String approvedBy;
 
-    @Column(nullable = false)
-    private String subject;
-
-    @Column(nullable = false)
-    private String createdBy;
-
-    @Column(nullable = false)
+    @NotBlank
     private String updatedBy;
 
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
+    @NotBlank
+    private String createdBy;
 
-    @Column
-    private LocalDateTime updatedAt;
+    @CreatedDate
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Embeddable
-    public static class StudentResult {
-        @Column(nullable = false)
+    @LastModifiedDate
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public ExamResult() {
+        this.examResultId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Inner class for student results
+    public static class StudentGrade {
+
+        @NotBlank
         private String student;
 
-        @Column(nullable = false)
-        private String gradeValue;
+        @NotBlank
+        private Double gradeValue;
 
-        @Column
         private String comments;
 
-        // Getters and Setters
         public String getStudent() {
             return student;
         }
@@ -64,11 +75,11 @@ public class ExamResult {
             this.student = student;
         }
 
-        public String getGradeValue() {
+        public Double getGradeValue() {
             return gradeValue;
         }
 
-        public void setGradeValue(String gradeValue) {
+        public void setGradeValue(Double gradeValue) {
             this.gradeValue = gradeValue;
         }
 
@@ -81,23 +92,13 @@ public class ExamResult {
         }
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    // Getters and Setters for outer class
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -125,11 +126,27 @@ public class ExamResult {
         this.classroom = classroom;
     }
 
-    public List<StudentResult> getStudents() {
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(String teacher) {
+        this.teacher = teacher;
+    }
+    
+    public List<StudentGrade> getStudents() {
         return students;
     }
 
-    public void setStudents(List<StudentResult> students) {
+    public void setStudents(List<StudentGrade> students) {
         this.students = students;
     }
 
@@ -141,12 +158,12 @@ public class ExamResult {
         this.approvedBy = approvedBy;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public String getCreatedBy() {
@@ -155,14 +172,6 @@ public class ExamResult {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
     }
 
     public LocalDateTime getCreatedAt() {

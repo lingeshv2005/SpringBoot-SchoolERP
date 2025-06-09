@@ -82,13 +82,18 @@ public ResponseEntity<?> createInvigilation(@RequestBody ExamInvigilation invigi
 
         for (ExamInvigilation.StudentGroup studentGroup : invigilation.getStudents()) {
             if (studentGroup == null) {
-                return ResponseEntity.badRequest().body("Invalid student group ID: " + studentGroup);
+                return ResponseEntity.badRequest().body("Invalid student group : " + studentGroup);
             }
             
             Optional<Subject> subject = subjectRepository.findBySubjectId(studentGroup.getSubject());
             if (subject.isEmpty()) {
                 return ResponseEntity.badRequest().body("Invalid subject ID: " + studentGroup.getSubject());
             }
+            
+        }
+        
+        for(int i=0; i < invigilation.getStudents().size(); i++) {
+            invigilation.getStudents().get(i).setQuestionPaperUrl(null);
         }
 for (String invigilator : invigilation.getInvigilators()) {
     if (invigilator == null || invigilator.isEmpty()) {
@@ -101,6 +106,7 @@ for (String invigilator : invigilation.getInvigilators()) {
     }
 }
         // Assign IDs and metadata
+        invigilation.setApprovedBy(null);
         invigilation.setExamInvigilationId(UUID.randomUUID().toString());
         invigilation.setCreatedBy(ucId);
         invigilation.setUpdatedBy(ucId);

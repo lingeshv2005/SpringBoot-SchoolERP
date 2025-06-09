@@ -375,17 +375,17 @@ const notificationSchema = new Schema({
 // 		Assign invigilators and students✅
 
 // By Exam Controller Head
-// 		Assign question papers
+// 		Assign question papers✅ 
 		
-// 		Create exam result
+// 		Create exam result✅
 
 // By Teacher
-// 		Update exam marks
+// 		Update exam marks✅
 
-// By Exam Controller Head
-// 		Approve exam result
+// By HOD
+// 		Approve exam result✅
 
-// By Students and parents 
+// By Students and parents
 // 		See results
 
 // By Teacher

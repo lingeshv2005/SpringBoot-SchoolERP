@@ -10,15 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.schoolerpbackend.entity.ExamResult;
 import com.example.schoolerpbackend.entity.QuestionPaper;
 import com.example.schoolerpbackend.entity.Subject;
 import com.example.schoolerpbackend.entity.Teacher;
 import com.example.schoolerpbackend.repository.ExamRepository;
+import com.example.schoolerpbackend.repository.ExamResultRepository;
 import com.example.schoolerpbackend.repository.QuestionPaperRepository;
 import com.example.schoolerpbackend.repository.SubjectRepository;
 import com.example.schoolerpbackend.repository.TeacherRepository;
@@ -35,6 +38,9 @@ public class TeacherController {
 
     @Autowired
     private ExamRepository examRepository;
+
+    @Autowired
+    private ExamResultRepository examResultRepository;
 
     @Autowired
     private SubjectRepository subjectRepository;
@@ -111,4 +117,82 @@ public class TeacherController {
                     .body("Error creating question paper: " + e.getMessage());
         }
     }
+
+@PutMapping("/exam-result/update-marks")
+public ResponseEntity<?> updateExamMarks(@RequestBody UpdateExamMarksRequest request,
+                                         @RequestParam String ucId) {
+    try {
+        if (request.getExamResultId() == null || request.getUpdates() == null || request.getUpdates().isEmpty()) {
+            return ResponseEntity.badRequest().body("ExamResultId and student updates are required.");
+        }
+
+        Optional<ExamResult> resultOpt = examResultRepository.findByExamResultId(request.getExamResultId());
+        if (resultOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Exam result not found.");
+        }
+
+        ExamResult result = resultOpt.get();
+
+        if (!ucId.equals(result.getTeacher())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("You are not authorized to update this exam result.");
+        }
+
+        // Manually update student grades
+        for (UpdateExamMarksRequest.StudentGradeUpdate update : request.getUpdates()) {
+            for (ExamResult.StudentGrade studentGrade : result.getStudents()) {
+                if (studentGrade.getStudent().equals(update.getStudentId())) {
+                    studentGrade.setGradeValue(update.getGradeValue());
+                    studentGrade.setComments(update.getComments());
+                }
+            }
+        }
+
+        result.setUpdatedBy(ucId);
+        result.setUpdatedAt(LocalDateTime.now());
+        examResultRepository.save(result);
+
+        return ResponseEntity.ok("Exam marks updated successfully.");
+
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error updating marks: " + e.getMessage());
+    }
+}
+
+
+
+
+
+
+public static class UpdateExamMarksRequest {
+    private String examResultId;
+    private List<StudentGradeUpdate> updates;
+
+    public static class StudentGradeUpdate {
+        private String studentId;
+        private Double gradeValue;
+        private String comments;
+
+        // Getters and Setters
+        public String getStudentId() { return studentId; }
+        public void setStudentId(String studentId) { this.studentId = studentId; }
+
+        public Double getGradeValue() { return gradeValue; }
+        public void setGradeValue(Double gradeValue) { this.gradeValue = gradeValue; }
+
+        public String getComments() { return comments; }
+        public void setComments(String comments) { this.comments = comments; }
+    }
+
+    public String getExamResultId() { return examResultId; }
+    public void setExamResultId(String examResultId) { this.examResultId = examResultId; }
+
+    public List<StudentGradeUpdate> getUpdates() { return updates; }
+    public void setUpdates(List<StudentGradeUpdate> updates) { this.updates = updates; }
+}
+
+
+
+
 }
