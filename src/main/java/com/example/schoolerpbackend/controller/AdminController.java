@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +20,9 @@ import com.example.schoolerpbackend.entity.ExamControllerHead;
 import com.example.schoolerpbackend.entity.Hod;
 import com.example.schoolerpbackend.entity.Principal;
 import com.example.schoolerpbackend.repository.AdminRepository;
+import com.example.schoolerpbackend.repository.ExamControllerHeadRepository;
 import com.example.schoolerpbackend.repository.HodRepository;
 import com.example.schoolerpbackend.repository.PrincipalRepository;
-import com.example.schoolerpbackend.repository.ExamControllerHeadRepository;
 
 @RestController
 @RequestMapping("/admin")
@@ -156,4 +157,21 @@ public class AdminController {
                     .body("Error logging in: " + e.getMessage());
         }
     }
+
+    @GetMapping("/get")
+public ResponseEntity<?> getAdminById(@RequestParam String adminId) {
+    try {
+        Optional<Admin> adminOptional = adminRepository.findByAdminId(adminId);
+        if (!adminOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found with ID: " + adminId);
+        }
+        return ResponseEntity.ok(adminOptional.get());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error fetching admin: " + e.getMessage());
+    }
 }
+
+}
+
+

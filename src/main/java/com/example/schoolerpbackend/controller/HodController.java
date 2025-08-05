@@ -1,11 +1,13 @@
 package com.example.schoolerpbackend.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -144,6 +146,17 @@ public ResponseEntity<?> approveExamResult(@RequestBody ExamApprovalRequest requ
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error approving exam result: " + e.getMessage());
+    }
+}
+
+@GetMapping("/all")
+public ResponseEntity<?> getAllHods() {
+    try {
+        List<Hod> hods = hodRepository.findAll();
+        return ResponseEntity.ok(hods);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error fetching HODs: " + e.getMessage());
     }
 }
 

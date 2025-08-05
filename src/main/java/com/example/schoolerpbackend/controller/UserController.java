@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +26,9 @@ import com.example.schoolerpbackend.entity.User;
 import com.example.schoolerpbackend.repository.AdminRepository;
 import com.example.schoolerpbackend.repository.ExamControllerRepository;
 import com.example.schoolerpbackend.repository.ParentRepository;
+import com.example.schoolerpbackend.repository.StudentRepository;
 import com.example.schoolerpbackend.repository.TeacherRepository;
 import com.example.schoolerpbackend.repository.UserRepository;
-import com.example.schoolerpbackend.repository.StudentRepository;
 
 @RestController
 @RequestMapping("/auth")
@@ -264,6 +265,21 @@ public ResponseEntity<?> registerStudent(@RequestBody RegisterStudentRequest req
                 .body("Error registering student: " + e.getMessage());
     }
 }
+
+@GetMapping("/get")
+public ResponseEntity<?> getUserById(@RequestParam String userId) {
+    try {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with ID: " + userId);
+        }
+        return ResponseEntity.ok(userOptional.get());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error fetching user: " + e.getMessage());
+    }
+}
+
 
     public static class RegisterStudentRequest {
         private User user;
