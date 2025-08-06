@@ -10,6 +10,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -258,6 +259,16 @@ public ResponseEntity<?> assignSubjects(@RequestBody AssignSubjectsRequest reque
     }
 }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllClassrooms() {
+        try {
+            List<Classroom> classrooms = classroomRepository.findAll();
+            return ResponseEntity.ok(classrooms);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching classrooms: " + e.getMessage());
+        }
+    }
 
 
     // DTO for assignClassTeacher request

@@ -258,7 +258,7 @@ public ResponseEntity<?> registerStudent(@RequestBody RegisterStudentRequest req
         }
 
         studentRepository.save(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(student);
 
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
